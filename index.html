@@ -1,1 +1,134 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Insta Control | Remote</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #050505;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: white;
+            padding: 20px;
+        }
 
+        .box {
+            background: rgba(21, 21, 21, 0.9);
+            padding: 20px;
+            border-radius: 20px;
+            text-align: center;
+            width: 340px; 
+            border: 1px solid #333;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.7);
+            backdrop-filter: blur(10px);
+        }
+
+        h2 { font-size: 18px; margin-bottom: 5px; color: #fff; text-transform: uppercase; }
+        #status-text { font-size: 13px; color: #2ecc71; margin-bottom: 15px; font-weight: bold; }
+
+        .btn {
+            display: block;
+            width: 100%;
+            height: 45px;
+            line-height: 45px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            text-align: center;
+            text-decoration: none;
+            box-sizing: border-box;
+        }
+
+        .btn-clear { background: #ffffff; color: #000; }
+        .btn-2fa { background: #0095f6; color: #ffffff; }
+        
+        #updateMsgBox {
+            display: none;
+            background: rgba(255, 71, 87, 0.1);
+            border: 1px dashed #ff4757;
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 10px;
+            color: #ff9f9f;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h2 id="title">Insta Control</h2>
+    <div id="status-text">System Active</div>
+    
+    <div id="actionButtons">
+        <button class="btn btn-clear" onclick="forceClear()">Clear Data</button>
+        
+        <a href="https://accountscenter.instagram.com/password_and_security/two_factor/" 
+           target="_blank" 
+           class="btn btn-2fa">
+           2FA On
+        </a>
+    </div>
+
+    <div id="updateMsgBox">
+        ⚠️ <b>অ্যাপ আপডেট করা হয়েছে।</b><br>
+        এডমিন পুনরায় সার্ভিস চালু করলে আপনি আবার ব্যবহার করতে পারবেন। অনুগ্রহ করে অপেক্ষা করুন।
+    </div>
+</div>
+
+<script>
+    const REMOTE_URL = "https://raw.githubusercontent.com/ferojmajumder100-lang/INSTAGRAM-control/main/status.txt";
+
+    function checkRemoteUpdate() {
+        fetch(REMOTE_URL + "?t=" + new Date().getTime())
+            .then(response => response.text())
+            .then(status => {
+                if (status.trim() === "UPDATE") {
+                    showUpdateScreen();
+                } else {
+                    document.getElementById('status-text').innerText = "System Active";
+                    document.getElementById('status-text').style.color = "#2ecc71";
+                }
+            })
+            .catch(() => {
+                document.getElementById('status-text').innerText = "System Active";
+            });
+    }
+
+    function showUpdateScreen() {
+        document.getElementById('status-text').innerText = "Status: Maintenance";
+        document.getElementById('status-text').style.color = "#ff4757";
+        document.getElementById('title').innerText = "Service Closed";
+        document.getElementById('actionButtons').classList.add('hidden');
+        document.getElementById('updateMsgBox').style.display = 'block';
+    }
+
+    function forceClear() {
+        localStorage.clear();
+        sessionStorage.clear();
+        
+        document.cookie.split(";").forEach(function(c) {
+            document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+        });
+
+        alert("ডাটা ক্লিয়ার হচ্ছে! আপনাকে লগআউট পেজে পাঠানো হচ্ছে।");
+        window.location.href = "https://www.instagram.com/accounts/logout/";
+    }
+
+    window.onload = checkRemoteUpdate;
+</script>
+
+</body>
+</html>
