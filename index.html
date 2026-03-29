@@ -2,133 +2,87 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Insta Control | Remote</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Update - কাজ চলছে</title>
     <style>
+        /* ফন্ট এবং বেসিক স্টাইল */
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background-color: #050505;
+            margin: 0;
+            padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            margin: 0;
+            height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             color: white;
-            padding: 20px;
-        }
-
-        .box {
-            background: rgba(21, 21, 21, 0.9);
-            padding: 20px;
-            border-radius: 20px;
             text-align: center;
-            width: 340px; 
-            border: 1px solid #333;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.7);
-            backdrop-filter: blur(10px);
         }
 
-        h2 { font-size: 18px; margin-bottom: 5px; color: #fff; text-transform: uppercase; }
-        #status-text { font-size: 13px; color: #2ecc71; margin-bottom: 15px; font-weight: bold; }
+        .container {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            max-width: 90%;
+            width: 400px;
+        }
 
-        .btn {
-            display: block;
-            width: 100%;
-            height: 45px;
-            line-height: 45px;
-            margin: 10px 0;
-            border: none;
-            border-radius: 10px;
+        /* অ্যানিমেশন আইকন */
+        .loader {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 2s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #ffde59;
+        }
+
+        p {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .status-tag {
+            display: inline-block;
+            padding: 5px 15px;
+            background-color: #e74c3c;
+            border-radius: 50px;
             font-size: 14px;
             font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-            text-align: center;
-            text-decoration: none;
-            box-sizing: border-box;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
-
-        .btn-clear { background: #ffffff; color: #000; }
-        .btn-2fa { background: #0095f6; color: #ffffff; }
-        
-        #updateMsgBox {
-            display: none;
-            background: rgba(255, 71, 87, 0.1);
-            border: 1px dashed #ff4757;
-            padding: 15px;
-            border-radius: 12px;
-            margin-top: 10px;
-            color: #ff9f9f;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-        
-        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-<div class="box">
-    <h2 id="title">Insta Control</h2>
-    <div id="status-text">System Active</div>
-    
-    <div id="actionButtons">
-        <button class="btn btn-clear" onclick="forceClear()">Clear Data</button>
+    <div class="container">
+        <div class="loader"></div>
         
-        <a href="https://accountscenter.instagram.com/password_and_security/two_factor/" 
-           target="_blank" 
-           class="btn btn-2fa">
-           2FA On
-        </a>
-    </div>
-
-    <div id="updateMsgBox">
-        ⚠️ <b>অ্যাপ আপডেট করা হয়েছে।</b><br>
-        এডমিন পুনরায় সার্ভিস চালু করলে আপনি আবার ব্যবহার করতে পারবেন। অনুগ্রহ করে অপেক্ষা করুন।
-    </div>
-</div>
-
-<script>
-    const REMOTE_URL = "https://raw.githubusercontent.com/ferojmajumder100-lang/INSTAGRAM-control/main/status.txt";
-
-    function checkRemoteUpdate() {
-        fetch(REMOTE_URL + "?t=" + new Date().getTime())
-            .then(response => response.text())
-            .then(status => {
-                if (status.trim() === "UPDATE") {
-                    showUpdateScreen();
-                } else {
-                    document.getElementById('status-text').innerText = "System Active";
-                    document.getElementById('status-text').style.color = "#2ecc71";
-                }
-            })
-            .catch(() => {
-                document.getElementById('status-text').innerText = "System Active";
-            });
-    }
-
-    function showUpdateScreen() {
-        document.getElementById('status-text').innerText = "Status: Maintenance";
-        document.getElementById('status-text').style.color = "#ff4757";
-        document.getElementById('title').innerText = "Service Closed";
-        document.getElementById('actionButtons').classList.add('hidden');
-        document.getElementById('updateMsgBox').style.display = 'block';
-    }
-
-    function forceClear() {
-        localStorage.clear();
-        sessionStorage.clear();
+        <div class="status-tag">বর্তমানে কাজ চলছে</div>
         
-        document.cookie.split(";").forEach(function(c) {
-            document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
-        });
-
-        alert("ডাটা ক্লিয়ার হচ্ছে! আপনাকে লগআউট পেজে পাঠানো হচ্ছে।");
-        window.location.href = "https://www.instagram.com/accounts/logout/";
-    }
-
-    window.onload = checkRemoteUpdate;
-</script>
+        <h1>অ্যাপ আপডেট হচ্ছে</h1>
+        
+        <p>আমরা আপনার অভিজ্ঞতা আরও উন্নত করতে অ্যাপটির আপডেটের কাজ করছি। অনুগ্রহ করে কিছুক্ষণ অপেক্ষা করুন।</p>
+        
+        <p style="font-size: 14px; opacity: 0.8;">খুব শীঘ্রই আমরা ফিরে আসছি!</p>
+    </div>
 
 </body>
 </html>
